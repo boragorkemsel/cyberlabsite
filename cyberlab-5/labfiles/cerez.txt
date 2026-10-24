@@ -1,0 +1,6 @@
+CyberLab TR :: Çerez Canavarı
+
+Bir web sitesine giriş yapınca tarayıcına şu çerez (cookie) yazıldı.
+Sunucu bu çerezi 'güvenli' sanıyor ama içini okuyabilir misin?
+
+Set-Cookie: session=eyJ1c2VyIjogImd1ZXN0IiwgInJvbGUiOiAiYWRtaW4iLCAiZmxhZyI6ICJDTEFCe2MwMGsxM19jNG40djRyMX0ifQ==; Path=/; HttpOnly

@@ -1,0 +1,7 @@
+CyberLab TR :: Vigenère
+
+Vigenère şifresi bir ANAHTAR kelime kullanır. Anahtar: SIBER
+(Harf olmayan karakterler — { } _ ve rakamlar — değişmeden kalır.)
+
+Şifreli metin:
+  UTBF{maofrvjm_brrzbbvz_kqcii}

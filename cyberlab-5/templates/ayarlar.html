@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Ayarlar · {{ site_name }}{% endblock %}
+{% block content %}
+<div class="settings-wrap">
+    <h1 style="margin-bottom:22px">Ayarlar</h1>
+
+    <div class="settings-card">
+        <h2>Hesap Bilgileri</h2>
+        <p class="settings-sub">Hesabına ait temel bilgiler.</p>
+        <div class="info-row"><span class="k">Kullanıcı adı</span><span class="v">{{ account['username'] }}</span></div>
+        <div class="info-row"><span class="k">E-posta</span><span class="v">{{ account['email'] }}</span></div>
+        <div class="info-row"><span class="k">Katılım tarihi</span><span class="v">{{ account['created_at'][:10] }}</span></div>
+    </div>
+
+    <div class="settings-card">
+        <h2>Parola Değiştir</h2>
+        <p class="settings-sub">Güvenliğin için düzenli olarak parolanı güncelle.</p>
+        <form method="post" class="form">
+            <label>Mevcut Parola
+                <input type="password" name="current_password" required>
+            </label>
+            <label>Yeni Parola
+                <input type="password" name="new_password" required minlength="6">
+            </label>
+            <label>Yeni Parola (Tekrar)
+                <input type="password" name="new_password2" required minlength="6">
+            </label>
+            <button class="btn btn-primary btn-block" type="submit">Parolayı Güncelle</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

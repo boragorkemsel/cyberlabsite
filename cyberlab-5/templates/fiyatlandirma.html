@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Fiyatlandırma · {{ site_name }}{% endblock %}
+{% block content %}
+<div class="page-head">
+    <h1>Fiyatlandırma</h1>
+    <p>Kendi hızında öğren. Ücretsiz başla, hazır olduğunda yükselt.
+       (Fiyatlar örnektir — MVP aşamasında ödeme sistemi henüz aktif değil.)</p>
+</div>
+
+<section class="pricing-grid">
+    <div class="price-card">
+        <div class="price-name">Ücretsiz</div>
+        <div class="price-amount">₺0<span> / ay</span></div>
+        <p class="price-desc">Başlamak için ihtiyacın olan her şey.</p>
+        <ul class="price-features">
+            <li>Tüm kolay laboratuvarlar</li>
+            <li>Puan ve ilerleme takibi</li>
+            <li>Topluluk desteği</li>
+        </ul>
+        {% if user %}
+            <a class="btn btn-ghost btn-block" href="{{ url_for('dashboard') }}">Mevcut planın</a>
+        {% else %}
+            <a class="btn btn-ghost btn-block" href="{{ url_for('register') }}">Ücretsiz Başla</a>
+        {% endif %}
+    </div>
+
+    <div class="price-card featured">
+        <span class="price-badge">EN POPÜLER</span>
+        <div class="price-name">Pro</div>
+        <div class="price-amount">₺149<span> / ay</span></div>
+        <p class="price-desc">Ciddi öğrenenler için tam erişim.</p>
+        <ul class="price-features">
+            <li>Tüm laboratuvarlar (orta & zor dahil)</li>
+            <li>Writeup ve detaylı çözümler</li>
+            <li>Öncelikli makine başlatma</li>
+            <li>Tamamlama sertifikaları</li>
+        </ul>
+        <a class="btn btn-primary btn-block" href="{{ url_for('register') }}">Pro'ya Geç</a>
+    </div>
+
+    <div class="price-card">
+        <div class="price-name">Takım</div>
+        <div class="price-amount">Özel<span> fiyat</span></div>
+        <p class="price-desc">Kurumlar ve eğitim ekipleri için.</p>
+        <ul class="price-features">
+            <li>Pro'daki her şey</li>
+            <li>Takım yönetim paneli</li>
+            <li>Özel CTF etkinlikleri</li>
+            <li>Raporlama ve analitik</li>
+        </ul>
+        <a class="btn btn-ghost btn-block" href="{{ url_for('fiyatlandirma') }}">İletişime Geç</a>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Kayıt Ol · {{ site_name }}{% endblock %}
+{% block content %}
+<section class="auth-wrap">
+    <div class="auth-card">
+        <h1 class="auth-title">Kayıt Ol</h1>
+        <p class="auth-sub">Hesabını oluştur ve laboratuvarlara erişmeye başla.</p>
+        <form method="post" class="form" novalidate>
+            <label>Kullanıcı Adı
+                <input type="text" name="username" value="{{ username or '' }}" required minlength="3" autofocus>
+            </label>
+            <label>E-posta
+                <input type="email" name="email" value="{{ email or '' }}" required>
+            </label>
+            <label>Parola
+                <input type="password" name="password" required minlength="6">
+            </label>
+            <label>Parola (Tekrar)
+                <input type="password" name="password2" required minlength="6">
+            </label>
+            <button class="btn btn-primary btn-block" type="submit">Hesap Oluştur</button>
+        </form>
+        <p class="auth-switch">Zaten hesabın var mı? <a href="{{ url_for('login') }}">Giriş yap</a></p>
+    </div>
+</section>
+{% endblock %}

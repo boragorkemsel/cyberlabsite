@@ -1,0 +1,217 @@
+{% extends "base.html" %}
+{% block title %}Panelim · {{ site_name }}{% endblock %}
+{% block content %}
+
+<!-- Rütbe / karşılama -->
+<section class="panel-hero">
+    <button type="button" class="avatar-edit panel-avatar-edit" id="avatarEdit" title="Profil resmini değiştir">
+        {% if user['avatar'] %}
+            <img class="panel-avatar-img" src="{{ url_for('static', filename=user['avatar']) }}" alt="">
+        {% else %}
+            <div class="panel-avatar">{{ user['username'][0]|upper }}</div>
+        {% endif %}
+        <span class="avatar-edit-overlay">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+            Değiştir
+        </span>
+    </button>
+    <div class="panel-hero-info">
+        <div class="panel-hero-top">
+            <h1>Merhaba, {{ user['username'] }}</h1>
+            <span class="rank-badge" style="--rc: {{ rank.color }}">{{ rank.name }}</span>
+        </div>
+        <div class="rank-progress">
+            <div class="rank-progress-bar"><span style="width: {{ rank.progress }}%; background: {{ rank.color }}"></span></div>
+            {% if rank.next_name %}
+                <span class="rank-progress-txt">Sonraki rütbe <strong>{{ rank.next_name }}</strong> için {{ rank.remaining }} puan</span>
+            {% else %}
+                <span class="rank-progress-txt">En yüksek rütbeye ulaştın! 🎉</span>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- İstatistik kutuları -->
+<section class="panel-stats">
+    <div class="pstat"><span class="pstat-num">{{ stats.points_all }}</span><span class="pstat-label">Toplam Puan</span></div>
+    <div class="pstat"><span class="pstat-num">{{ stats.solved_labs }}/{{ stats.total_labs }}</span><span class="pstat-label">Çözülen Lab</span></div>
+    <div class="pstat"><span class="pstat-num">{{ stats.solved_machines }}/{{ stats.total_machines }}</span><span class="pstat-label">Çözülen Makine</span></div>
+    <div class="pstat"><span class="pstat-num">{{ ('#' ~ week_rank) if week_rank else '—' }}</span><span class="pstat-label">Haftalık Sıra</span></div>
+    <div class="pstat"><span class="pstat-num">{{ stats.streak }} 🔥</span><span class="pstat-label">Günlük Seri</span></div>
+</section>
+
+<div class="panel-grid">
+    <!-- Sol: ilerleme + öneri -->
+    <div class="panel-col">
+        <div class="panel-card">
+            <h2>Zorluğa Göre İlerleme</h2>
+            {% for d, info in diff_prog.items() %}
+            <div class="diffbar-row">
+                <span class="diffbar-label tag tag-{{ d|lower }}">{{ d }}</span>
+                <div class="diffbar"><span style="width: {{ (info.done/info.total*100) if info.total else 0 }}%"></span></div>
+                <span class="diffbar-count">{{ info.done }}/{{ info.total }}</span>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% if rec %}
+        <div class="panel-card rec-card">
+            <h2>Önerilen Lab</h2>
+            <a class="rec-lab" href="{{ url_for('lab_detail', slug=rec['slug']) }}">
+                <div>
+                    <span class="cat-badge">{{ rec['category'] }}</span>
+                    <h3>{{ rec['name'] }}</h3>
+                    <p>{{ rec['short_desc'] }}</p>
+                </div>
+                <span class="tag tag-{{ rec['difficulty']|lower }}">{{ rec['difficulty'] }}</span>
+            </a>
+        </div>
+        {% endif %}
+
+        <div class="panel-card">
+            <h2>Son Aktiviteler</h2>
+            {% if stats.recent %}
+                <ul class="activity">
+                    {% for a in stats.recent %}
+                    <li>
+                        <span class="act-dot">✓</span>
+                        <span class="act-text"><strong>{{ a.lab }}</strong> görevi çözüldü</span>
+                        <span class="act-pts">+{{ a.pts }}</span>
+                        <span class="act-when">{{ a.when }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="muted">Henüz bir aktiviten yok. İlk lab'ını çözmeye ne dersin?</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Sağ: rozetler -->
+    <div class="panel-col">
+        <div class="panel-card">
+            <h2>Rozetler <span class="badge-count">{{ earned|length }}/{{ (earned|length) + (locked|length) }}</span></h2>
+            <div class="badge-grid">
+                {% for b in earned %}
+                <div class="badge earned" title="{{ b.desc }}">
+                    <span class="badge-icon">{{ b.icon }}</span>
+                    <span class="badge-name">{{ b.name }}</span>
+                </div>
+                {% endfor %}
+                {% for b in locked %}
+                <div class="badge locked" title="{{ b.desc }}">
+                    <span class="badge-icon">🔒</span>
+                    <span class="badge-name">{{ b.name }}</span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Gizli dosya girişi + kırpma penceresi (profil resmi) -->
+<input type="file" id="avatarFile" accept="image/png,image/jpeg" hidden>
+<div class="crop-overlay" id="cropOverlay" hidden>
+    <div class="crop-card">
+        <h2>Profil Resmini Ayarla</h2>
+        <p class="crop-hint">Sürükleyerek konumlandır, yakınlaştırmak için kaydırıcıyı kullan.</p>
+        <div class="crop-viewport" id="cropViewport">
+            <img id="cropImg" alt="" draggable="false">
+            <div class="crop-ring"></div>
+        </div>
+        <div class="crop-zoom-row">
+            <span>−</span>
+            <input type="range" id="cropZoom" min="1" max="3" step="0.01" value="1">
+            <span>+</span>
+        </div>
+        <div class="crop-actions">
+            <button class="btn btn-ghost" type="button" id="cropCancel">İptal</button>
+            <button class="btn btn-primary" type="button" id="cropSave">Kaydet</button>
+        </div>
+    </div>
+</div>
+
+<script>
+(function () {
+    var V = 280; // crop-viewport boyutu (CSS ile aynı olmalı)
+    var editBtn = document.getElementById('avatarEdit');
+    var fileInput = document.getElementById('avatarFile');
+    var overlay = document.getElementById('cropOverlay');
+    var vp = document.getElementById('cropViewport');
+    var img = document.getElementById('cropImg');
+    var zoom = document.getElementById('cropZoom');
+    var natW, natH, scale, ox, oy, dragging = false, lastX, lastY;
+    if (!editBtn) return;
+
+    editBtn.addEventListener('click', function () { fileInput.click(); });
+
+    fileInput.addEventListener('change', function () {
+        var f = fileInput.files[0];
+        if (!f) return;
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            img.onload = function () {
+                natW = img.naturalWidth; natH = img.naturalHeight;
+                var minScale = Math.max(V / natW, V / natH);
+                zoom.min = minScale; zoom.max = minScale * 3; zoom.step = minScale / 100;
+                zoom.value = minScale; scale = minScale;
+                ox = (V - natW * scale) / 2; oy = (V - natH * scale) / 2;
+                render(); overlay.hidden = false;
+            };
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(f);
+    });
+
+    function clamp() {
+        var dw = natW * scale, dh = natH * scale;
+        if (ox > 0) ox = 0; if (oy > 0) oy = 0;
+        if (ox < V - dw) ox = V - dw; if (oy < V - dh) oy = V - dh;
+    }
+    function render() {
+        clamp();
+        img.style.width = (natW * scale) + 'px';
+        img.style.height = (natH * scale) + 'px';
+        img.style.left = ox + 'px'; img.style.top = oy + 'px';
+    }
+
+    zoom.addEventListener('input', function () {
+        var ns = parseFloat(zoom.value), cx = V / 2, cy = V / 2;
+        ox = cx - (cx - ox) * (ns / scale);
+        oy = cy - (cy - oy) * (ns / scale);
+        scale = ns; render();
+    });
+
+    function down(x, y) { dragging = true; lastX = x; lastY = y; }
+    function move(x, y) {
+        if (!dragging) return;
+        ox += x - lastX; oy += y - lastY; lastX = x; lastY = y; render();
+    }
+    vp.addEventListener('mousedown', function (e) { e.preventDefault(); down(e.clientX, e.clientY); });
+    window.addEventListener('mousemove', function (e) { move(e.clientX, e.clientY); });
+    window.addEventListener('mouseup', function () { dragging = false; });
+    vp.addEventListener('touchstart', function (e) { down(e.touches[0].clientX, e.touches[0].clientY); }, { passive: true });
+    vp.addEventListener('touchmove', function (e) { move(e.touches[0].clientX, e.touches[0].clientY); }, { passive: true });
+    vp.addEventListener('touchend', function () { dragging = false; });
+
+    document.getElementById('cropCancel').addEventListener('click', function () {
+        overlay.hidden = true; fileInput.value = '';
+    });
+    document.getElementById('cropSave').addEventListener('click', function () {
+        var s = V / scale, sx = -ox / scale, sy = -oy / scale;
+        var btn = this; btn.disabled = true; btn.textContent = 'Yükleniyor...';
+        var fd = new FormData();
+        fd.append('avatar', fileInput.files[0]);
+        fd.append('s', Math.round(s));
+        fd.append('sx', Math.round(sx));
+        fd.append('sy', Math.round(sy));
+        fetch(window.location.pathname, { method: 'POST', body: fd })
+            .then(function () { window.location.reload(); })
+            .catch(function () {
+                btn.disabled = false; btn.textContent = 'Kaydet';
+                alert('Yükleme başarısız, tekrar dene.');
+            });
+    });
+})();
+</script>
+{% endblock %}

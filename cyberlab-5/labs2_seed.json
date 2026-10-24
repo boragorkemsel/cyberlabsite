@@ -1,0 +1,366 @@
+[
+  {
+    "slug": "base-kampi",
+    "name": "Base Kampı",
+    "category": "Kodlama",
+    "difficulty": "Kolay",
+    "short_desc": "Üst üste binmiş Base64/Base32/Hex kodlamalarını katman katman çöz.",
+    "description": "Veri genelde şifrelenmez, sadece KODLANIR — yani anahtarsız, geri döndürülebilir biçimde gizlenir. Base64, Base32 ve Hex en sık görülen kodlamalardır.\n\nBu görevde bir flag üç kez üst üste kodlanmış. Dosyadaki metni açıp katmanları doğru sırayla çözmen gerekiyor.\n\nAmacımız: kodlama türlerini gözle tanımayı ve çözmeyi öğrenmek.",
+    "tags": "kodlama,base64,base32,hex,başlangıç",
+    "files": "base_kampi.txt",
+    "tools": "CyberChef, Python, base64 komutu",
+    "tasks": [
+      {
+        "q": "Üç katmanı çözünce çıkan flag nedir?",
+        "a": "CLAB{b4s3_c4mp_g3ct1n}",
+        "p": 50,
+        "h": "Kodlamaları şöyle tanı: Base64 → harf/rakam ve bazen sonunda '=' olur. Base32 → SADECE BÜYÜK harf ve 2-7 rakamları. Hex → sadece 0-9 ve a-f.\nEn kolay yol CyberChef (gchq.github.io/CyberChef): sırayla 'From Base64', 'From Base32', 'From Hex' bloklarını sürükle. Her adımdan sonra çıktı bir sonraki kodlamaya benzeyecek. Sonunda CLAB{...} göreceksin."
+      }
+    ]
+  },
+  {
+    "slug": "mors-alfabesi",
+    "name": "Mors Alfabesi",
+    "category": "Kodlama / Kriptografi",
+    "difficulty": "Kolay",
+    "short_desc": "Nokta ve çizgilerden oluşan Mors kodunu çözüp gizli kelimeyi bul.",
+    "description": "Mors alfabesi, harf ve rakamları nokta (.) ve çizgi (-) dizileriyle gösteren eski bir iletişim yöntemidir. Bugün bile CTF'lerde ve sinyal analizinde karşına çıkar.\n\nDosyadaki Mors kodunu çöz ve ortaya çıkan kelimeyi bul.",
+    "tags": "mors,kodlama,başlangıç",
+    "files": "mors.txt",
+    "tools": "CyberChef, Mors alfabesi tablosu",
+    "tasks": [
+      {
+        "q": "Mors kodu çözülünce çıkan kelime nedir?",
+        "a": "SIBERGUVENLIK2024",
+        "p": 50,
+        "h": "Her harf boşlukla ayrılmış nokta/çizgi grubudur. Örnek: '...' = S, '.-' = A.\nElle çözmek istersen bir 'Mors alfabesi tablosu' aç ve grupları tek tek çevir. Hızlı yol: CyberChef'te 'From Morse Code' bloğunu kullan. Cevabı büyük/küçük harf fark etmeden yazabilirsin."
+      }
+    ]
+  },
+  {
+    "slug": "cerez-canavari",
+    "name": "Çerez Canavarı",
+    "category": "Web Güvenliği",
+    "difficulty": "Kolay",
+    "short_desc": "Base64 ile 'gizlenmiş' bir oturum çerezinin içini oku.",
+    "description": "Web siteleri, seni hatırlamak için tarayıcına çerez (cookie) yazar. Bazı siteler çerez içindeki veriyi şifrelemek yerine sadece Base64 ile kodlar — bu GÜVENLİ DEĞİLDİR, çünkü herkes çözebilir.\n\nDosyadaki çerez değerini çöz ve içindeki bilgileri (rol ve flag) ortaya çıkar.",
+    "tags": "web,cookie,base64,başlangıç",
+    "files": "cerez.txt",
+    "tools": "CyberChef, tarayıcı geliştirici araçları, base64",
+    "tasks": [
+      {
+        "q": "Çerez çözülünce kullanıcının rolü (role) nedir?",
+        "a": "admin",
+        "p": 25,
+        "h": "'session=' kısmından sonraki uzun metin Base64 kodlu. Onu çöz (CyberChef 'From Base64' veya terminalde: echo '<deger>' | base64 -d). Çıkan metin bir JSON olacak; 'role' alanına bak."
+      },
+      {
+        "q": "Çerezin içine gömülü flag nedir?",
+        "a": "CLAB{c00k13_c4n4v4r1}",
+        "p": 50,
+        "h": "Aynı çözülmüş JSON içinde 'flag' alanı var. CLAB{...} değerini al."
+      }
+    ]
+  },
+  {
+    "slug": "ikili-dunya",
+    "name": "İkili Dünya",
+    "category": "Kodlama",
+    "difficulty": "Kolay",
+    "short_desc": "0 ve 1'lerden oluşan ikili mesajı okunabilir metne çevir.",
+    "description": "Bilgisayarlar harfleri sayılarla (ASCII) ve sayıları da ikili (binary, yani 0/1) olarak saklar. 'A' harfi aslında 01000001'dir.\n\nDosyadaki 8'erli bit gruplarını karakterlere çevirerek gizli flag'i oku.",
+    "tags": "ikili,binary,ascii,başlangıç",
+    "files": "ikili.txt",
+    "tools": "CyberChef, Python",
+    "tasks": [
+      {
+        "q": "İkili mesaj çözülünce çıkan flag nedir?",
+        "a": "CLAB{1k1l1_d3v3_h3r_y3rd3}",
+        "p": 50,
+        "h": "Her 8 bitlik grup (örn. 01000011) bir ASCII karakterdir. 01000011 = 67 = 'C'.\nHızlı yol: CyberChef'te 'From Binary' bloğu (ayraç olarak 'Space' seç). Python ile: ''.join(chr(int(b,2)) for b in metin.split())."
+      }
+    ]
+  },
+  {
+    "slug": "ssh-avcisi",
+    "name": "SSH Avcısı",
+    "category": "Log Analizi / Blue Team",
+    "difficulty": "Kolay",
+    "short_desc": "SSH giriş loglarından kaba kuvvet (brute force) saldırısını çöz.",
+    "description": "Sunucuların SSH giriş kayıtları (auth.log) saldırıları yakalamak için altın değerindedir. Bir saldırgan, doğru parolayı bulana kadar yüzlerce deneme yapar ('brute force'). Sonunda bir hesaba girmeyi başarmış.\n\nLogu incele: saldırganı, kaç deneme yaptığını ve hangi hesaba girdiğini bul.",
+    "tags": "log,ssh,brute-force,blue-team,başlangıç",
+    "files": "auth.log",
+    "tools": "grep, awk, sort, uniq, metin editörü",
+    "tasks": [
+      {
+        "q": "Saldırganın IP adresi nedir?",
+        "a": "103.74.19.88",
+        "p": 25,
+        "h": "Saldırgan çok sayıda 'Failed password' satırı üretir. En çok tekrar eden IP'yi bul: grep 'Failed password' auth.log | awk '{print $NF... }' — ya da kısaca grep Failed auth.log ile bak, aynı IP tekrar tekrar görünür."
+      },
+      {
+        "q": "Saldırgan kaç başarısız (Failed) deneme yaptı?",
+        "a": "27",
+        "p": 25,
+        "h": "'Failed password' geçen satırları say: grep -c 'Failed password' auth.log. (Sayıyı rakamla yaz, örn. 27.)"
+      },
+      {
+        "q": "Saldırgan hangi kullanıcı adıyla sisteme girmeyi BAŞARDI?",
+        "a": "yedek",
+        "p": 50,
+        "h": "Başarılı girişler 'Accepted password for <kullanıcı>' yazar. Ama dikkat: en baştaki başarılı giriş normal kullanıcıya (ahmet) ait. Sen SALDIRGANIN IP'sinden gelen 'Accepted password' satırını ara: grep Accepted auth.log"
+      }
+    ]
+  },
+  {
+    "slug": "tersten-bak",
+    "name": "Tersten Bak",
+    "category": "Kriptografi",
+    "difficulty": "Kolay",
+    "short_desc": "Ters çevirme ve Atbash aynalama gibi klasik basit şifreleri çöz.",
+    "description": "En eski 'şifreleme' hileleri bazen en basitleridir: metni tersten yazmak ya da alfabeyi aynalamak (Atbash). İkisini de çözmeyi öğren.\n\nGörev 1: ters çevrilmiş metin.  Görev 2: Atbash ile aynalanmış metin.",
+    "tags": "kripto,atbash,reverse,başlangıç",
+    "files": "tersten.txt",
+    "tools": "CyberChef, Python",
+    "tasks": [
+      {
+        "q": "Görev 1: ters çevrilmiş metnin düz hali (flag) nedir?",
+        "a": "CLAB{t3rs1n3_c3v1rd1m}",
+        "p": 25,
+        "h": "Metni sondan başa oku. Python: metin[::-1]. CyberChef: 'Reverse' bloğu. Düzelince CLAB{ ile başlamalı."
+      },
+      {
+        "q": "Görev 2: Atbash çözülünce çıkan flag nedir?",
+        "a": "CLAB{ayn4_ayn4_s0yl3}",
+        "p": 50,
+        "h": "Atbash'ta A=Z, B=Y, C=X ... yani harf alfabenin sonundan sayılır. Rakamlar ve { } _ değişmez. CyberChef'te 'Atbash Cipher' bloğunu kullan."
+      }
+    ]
+  },
+  {
+    "slug": "jwt-kirigi",
+    "name": "JWT Kırığı",
+    "category": "Web Güvenliği / Token",
+    "difficulty": "Orta",
+    "short_desc": "Bir JWT oturum anahtarının içindeki gizli bilgileri çöz.",
+    "description": "JWT (JSON Web Token), web uygulamalarında oturum yönetmek için çok kullanılır. Üç parçadan oluşur, nokta (.) ile ayrılır: header.payload.signature.\n\nÇok önemli bir nokta: JWT içeriği ŞİFRELİ DEĞİL, sadece Base64URL kodludur. Yani imzayı kıramasan bile içindeki veriyi herkes okuyabilir. Ortadaki 'payload' parçasını çöz.",
+    "tags": "web,jwt,token,base64,orta",
+    "files": "token.txt",
+    "tools": "jwt.io, CyberChef, Python",
+    "tasks": [
+      {
+        "q": "Token'ın payload (orta) kısmındaki kullanıcı adı (user) nedir?",
+        "a": "admin",
+        "p": 50,
+        "h": "Token'ı iki noktadan böl: üç parça olur. ORTADAKİ parça payload'dır ve Base64URL kodludur. Onu çöz. En kolayı: jwt.io sitesine token'ı yapıştır, sağda payload JSON görünür. 'user' alanına bak."
+      },
+      {
+        "q": "Payload içine gömülü flag nedir?",
+        "a": "CLAB{jwt_g1zl1_d3g1l}",
+        "p": 50,
+        "h": "Aynı çözülmüş payload JSON'unda 'flag' alanı var. CLAB{...} değerini al."
+      }
+    ]
+  },
+  {
+    "slug": "xor-gizemi",
+    "name": "XOR Gizemi",
+    "category": "Kriptografi",
+    "difficulty": "Orta",
+    "short_desc": "Tek baytlık XOR ile şifrelenmiş metni kaba kuvvetle çöz.",
+    "description": "XOR, kriptografinin temel taşıdır. Bir veri tek bir bayt ile XOR'lanırsa, sadece 256 olası anahtar vardır — yani hepsini denemek (brute force) saniyeler sürer.\n\nDosyadaki hex metni çöz. Doğru anahtarı bulduğunda okunabilir bir flag çıkacak.",
+    "tags": "kripto,xor,brute-force,hex,orta",
+    "files": "xor.txt",
+    "tools": "CyberChef (XOR Brute Force), Python",
+    "tasks": [
+      {
+        "q": "XOR çözülünce çıkan flag nedir?",
+        "a": "CLAB{x0r_t3k_b4yt_k1r1ld1}",
+        "p": 75,
+        "h": "Önce hex'i ham bayta çevir. Sonra 0'dan 255'e kadar her anahtarla XOR dene; hangi sonuç okunabilir ve 'CLAB{' ile başlıyorsa o doğrudur.\nEn kolayı CyberChef: 'From Hex' + 'XOR Brute Force' bloğu — tüm anahtarları listeler, CLAB içeren satırı seç. Python: for k in range(256): dene."
+      }
+    ]
+  },
+  {
+    "slug": "vigenere",
+    "name": "Vigenère Şifresi",
+    "category": "Kriptografi",
+    "difficulty": "Orta",
+    "short_desc": "Anahtar kelimeli klasik Vigenère şifresini verilen anahtarla çöz.",
+    "description": "Vigenère, Sezar şifresinin gelişmiş halidir: tek bir kayma yerine bir ANAHTAR kelime kullanır ve her harfi anahtarın harfine göre farklı miktarda kaydırır. Yüzyıllarca 'kırılamaz' sanıldı.\n\nAnahtar sana verildi (SIBER). Şifreli metni çöz.",
+    "tags": "kripto,vigenere,klasik,orta",
+    "files": "vigenere.txt",
+    "tools": "CyberChef (Vigenère Decode), dcode.fr, Python",
+    "tasks": [
+      {
+        "q": "Vigenère çözülünce çıkan flag nedir?",
+        "a": "CLAB{vigenere_anahtari_siber}",
+        "p": 75,
+        "h": "Anahtar: SIBER. CyberChef'te 'Vigenère Decode' bloğunu ekle ve key kısmına SIBER yaz. Harf olmayanlar (süslü parantez, alt çizgi) aynen kalır, sadece harfler çözülür. Sonuç CLAB{ ile başlamalı."
+      }
+    ]
+  },
+  {
+    "slug": "ftp-sizintisi",
+    "name": "FTP Sızıntısı",
+    "category": "Ağ Adli Bilişimi",
+    "difficulty": "Orta",
+    "short_desc": "Şifrelenmemiş FTP trafiğinden kullanıcı parolasını ve sızan dosyayı yakala.",
+    "description": "FTP, dosya transferi için kullanılan ESKİ ve ŞİFRESİZ bir protokoldür. Kullanıcı adı, parola ve transfer edilen dosyalar ağda düz metin gider — yani trafiği dinleyen herkes görebilir. Bu yüzden bugün yerine SFTP/FTPS kullanılır.\n\nYakalanmış FTP trafiğini (PCAP) incele: parolayı ve transfer edilen gizli dosyadaki flag'i bul.",
+    "tags": "pcap,ftp,network,cleartext,orta",
+    "files": "ftp.pcap",
+    "tools": "Wireshark, tshark, strings",
+    "tasks": [
+      {
+        "q": "FTP girişinde kullanılan parola nedir?",
+        "a": "Yedek!2024",
+        "p": 40,
+        "h": "FTP parolaları 'PASS' komutuyla gönderilir. Wireshark'ta paketi bul, sağ tık → 'Follow TCP Stream'; ya da terminalde: strings ftp.pcap | grep PASS"
+      },
+      {
+        "q": "Transfer edilen gizli dosyadaki flag nedir?",
+        "a": "CLAB{ftp_s1fr3s1z_g1d1y0r}",
+        "p": 50,
+        "h": "Dosya içeriği de düz metin gider. strings ftp.pcap komutunda 'FLAG:' ya da 'CLAB{' ara. Wireshark'ta ise veri (RETR sonrası) paketine bak."
+      }
+    ]
+  },
+  {
+    "slug": "sahte-dosya",
+    "name": "Sahte Dosya",
+    "category": "Adli Bilişim",
+    "difficulty": "Orta",
+    "short_desc": "Uzantısı yanlış bir dosyanın gerçek türünü bul ve içindeki veriyi çıkar.",
+    "description": "Dosya uzantısı (.jpg, .pdf, .zip) sadece bir isimdir — yalan olabilir. Bir dosyanın GERÇEK türü, ilk birkaç baytındaki 'sihirli baytlar' (magic bytes) ile belli olur. Saldırganlar dosya türünü gizlemek için uzantı değiştirir.\n\nSana 'resim.jpg' verildi ama gerçekte başka bir tür. Önce gerçek türünü bul, sonra içindeki gizli flag'e ulaş.",
+    "tags": "forensics,magic-bytes,file,orta",
+    "files": "resim.jpg",
+    "tools": "file komutu, xxd/hexdump, strings, exiftool",
+    "tasks": [
+      {
+        "q": "Dosyanın GERÇEK türü nedir? (dosya formatının adı)",
+        "a": "PNG",
+        "p": 40,
+        "h": "Terminalde 'file resim.jpg' komutu gerçek türü söyler. İstersen 'xxd resim.jpg | head' ile ilk baytlara bak: 89 50 4E 47 = PNG demektir (ASCII'de '.PNG'). Cevabı kısaca formatın adı olarak yaz."
+      },
+      {
+        "q": "Dosyanın içine gizlenmiş flag nedir?",
+        "a": "CLAB{s1h1rl1_b4ytl4r_y4l4n_s0yl3m3z}",
+        "p": 50,
+        "h": "Gerçek tür PNG olduğuna göre PNG araçları çalışır. 'strings resim.jpg | grep CLAB' ya da 'exiftool resim.jpg' metadata/metin alanlarını gösterir."
+      }
+    ]
+  },
+  {
+    "slug": "oltalama",
+    "name": "Oltalama (Phishing)",
+    "category": "E-posta Güvenliği / Blue Team",
+    "difficulty": "Orta",
+    "short_desc": "Sahte bir bankadan gelen oltalama e-postasının başlıklarını analiz et.",
+    "description": "Oltalama (phishing) e-postaları, gerçek bir kurumdan geliyormuş gibi görünüp seni sahte bir siteye yönlendirir. Ama e-posta BAŞLIKLARI (headers) gerçeği saklayamaz: gönderenin asıl sunucusu, SPF doğrulaması ve içindeki linkler oradadır.\n\nHam e-postayı (.eml) incele: gerçek gönderici IP'sini, sahte linki ve gizli flag'i bul.\n\nBu, bir SOC analistinin şüpheli maili 'triage' ederken yaptığı işin ta kendisidir.",
+    "tags": "phishing,email,headers,spf,blue-team,orta",
+    "files": "sahte_mail.eml",
+    "tools": "metin editörü, e-posta başlık analizi",
+    "tasks": [
+      {
+        "q": "E-postayı gönderen sunucunun GERÇEK IP adresi nedir?",
+        "a": "193.42.18.77",
+        "p": 40,
+        "h": "'Received:' başlıklarına bak — mailin geçtiği sunucuları gösterir. Köşeli parantez içindeki [IP] gönderen sunucunun adresidir. 'From' satırına GÜVENME, o sahtelenebilir; Received ve Return-Path daha güvenilirdir."
+      },
+      {
+        "q": "Oltalama linkindeki sahte alan adı (domain) nedir?",
+        "a": "bankaniz-guvenlik.xyz",
+        "p": 25,
+        "h": "Mail gövdesindeki <a href=\"...\"> linkine bak. 'bankaniz.com' gibi görünmeye çalışan ama farklı olan alan adını bul (örn. http://... kısmındaki host)."
+      },
+      {
+        "q": "E-posta başlıklarına gizlenmiş flag nedir?",
+        "a": "CLAB{0lt4l4m4y1_f4rk_3tt1m}",
+        "p": 35,
+        "h": "Standart dışı bir başlık satırı var: 'X-' ile başlayanlara bak. CLAB{...} orada."
+      }
+    ]
+  },
+  {
+    "slug": "bellek-dokumu",
+    "name": "Bellek Dökümü",
+    "category": "Adli Bilişim",
+    "difficulty": "Orta",
+    "short_desc": "Bir bellek dökümündeki gürültünün içinden sızan parolayı ve flag'i çıkar.",
+    "description": "Bir programın RAM'i (belleği) ele geçirildiğinde, içinde o an çalışan her şey bulunur: açık dosyalar, bağlantılar ve bazen DÜZ METİN parolalar. Adli bilişimciler bu dökümleri (memory dump) analiz ederek kanıt toplar.\n\nDosya çoğunlukla okunamaz gürültü içeriyor ama arasına düz metin bilgiler sızmış. Sızan veritabanı parolasını ve oturum flag'ini bul.",
+    "tags": "forensics,memory,strings,orta",
+    "files": "bellek.dmp",
+    "tools": "strings, grep",
+    "tasks": [
+      {
+        "q": "Bellekte düz metin olarak sızan veritabanı parolası nedir?",
+        "a": "Sup3rG1zl1Parola!",
+        "p": 50,
+        "h": "Gürültünün içindeki okunabilir metinleri çek: 'strings bellek.dmp'. Sonra parola ara: strings bellek.dmp | grep -i password  — 'password=' kısmındaki değeri al."
+      },
+      {
+        "q": "Bellekteki oturum token'ında saklı flag nedir?",
+        "a": "CLAB{b3ll3kt3_h3rs3y_v4r}",
+        "p": 50,
+        "h": "strings bellek.dmp | grep CLAB  — ya da 'SESSION_TOKEN' ara."
+      }
+    ]
+  },
+  {
+    "slug": "gizli-katman",
+    "name": "Gizli Katman (LSB)",
+    "category": "Steganografi",
+    "difficulty": "Zor",
+    "short_desc": "Piksellerin en önemsiz bitine (LSB) gömülmüş veriyi çıkar.",
+    "description": "Gerçek steganografi, veriyi dosyanın sonuna eklemekten daha sinsidir. LSB (Least Significant Bit) tekniğinde, her pikselin renk değerinin EN SON biti değiştirilerek gizli mesaj saklanır. Göz bunu fark edemez çünkü renk neredeyse hiç değişmez.\n\nBu PNG'nin kırmızı (R) kanalının LSB'lerine bir flag gizlenmiş. Çıkarabilir misin?",
+    "tags": "stego,lsb,ileri,python,zor",
+    "files": "lsb.png",
+    "tools": "zsteg, Python (PIL), stegsolve",
+    "tasks": [
+      {
+        "q": "LSB'ye gizlenmiş flag nedir?",
+        "a": "CLAB{l5b_st3g4n0gr4f1_pr0}",
+        "p": 100,
+        "h": "Mantık: her pikselin R (kırmızı) değerinin son bitini al, sırayla diz, 8'erli grupla ve ASCII'ye çevir. \\x00 (null) baytında dur.\nHazır araç: 'zsteg lsb.png' çoğu LSB gizlemesini otomatik bulur.\nPython ile:\n  from PIL import Image\n  im=Image.open('lsb.png').load()\n  bits=''.join(str(im[x,y][0]&1) for y in range(200) for x in range(200))\n  s=''.join(chr(int(bits[i:i+8],2)) for i in range(0,len(bits),8))\n  print(s.split(chr(0))[0])"
+      }
+    ]
+  },
+  {
+    "slug": "zincirleme",
+    "name": "Zincirleme",
+    "category": "Kriptografi",
+    "difficulty": "Zor",
+    "short_desc": "Üst üste uygulanmış birden fazla dönüşümü doğru sırayla geri al.",
+    "description": "Gerçek dünyada veri bazen birden çok işlemden geçirilerek gizlenir. İşin püf noktası: işlemleri DOĞRU ve TERS sırayla geri almak. Bir adımı atlarsan hiçbir şey çıkmaz.\n\nBu flag şu sırayla işlendi: Hex kodlandı → ters çevrildi → Base64 kodlandı. Sen tam tersini yapacaksın.",
+    "tags": "kripto,base64,hex,çok-katman,zor",
+    "files": "zincir.txt",
+    "tools": "CyberChef, Python",
+    "tasks": [
+      {
+        "q": "Tüm katmanlar çözülünce çıkan flag nedir?",
+        "a": "CLAB{z1nc1rl3m3_r34ks1y0n}",
+        "p": 100,
+        "h": "Sırayı takip et: (1) metni Base64 çöz → garip görünen bir metin çıkar. (2) bu metni ters çevir (Reverse) → bir hex dizisi (0-9, a-f) olmalı. (3) bu hex'i çöz (From Hex) → flag.\nCyberChef'te şu üç bloğu sırayla ekle: 'From Base64', 'Reverse', 'From Hex'."
+      }
+    ]
+  },
+  {
+    "slug": "gizli-script",
+    "name": "Gizli Script",
+    "category": "Tersine Mühendislik",
+    "difficulty": "Zor",
+    "short_desc": "Gizlenmiş (obfuscated) bir betiğin ürettiği flag'i çöz.",
+    "description": "Zararlı yazılımlar genellikle kodlarını GİZLER (obfuscation): gerçek veriyi sayı dizileri, XOR işlemleri veya base64 arkasına saklar. Analistin işi bu kodu okuyup ne yaptığını anlamaktır — çalıştırmadan bile.\n\nSana bir Python betiği verildi. Bir flag üretiyor. İstersen çalıştır, ama asıl amaç kodun mantığını çözmek.",
+    "tags": "reverse,python,obfuscation,xor,zor",
+    "files": "gizli_script.py",
+    "tools": "Python, metin editörü",
+    "tasks": [
+      {
+        "q": "Betiğin ürettiği flag nedir?",
+        "a": "CLAB{k0du_c0z_c4l1st1r_v3y4_0ku}",
+        "p": 100,
+        "h": "En hızlı yol: güvendiğin bir ortamda 'python3 gizli_script.py' çalıştır — flag'i ekrana yazar. (Bu betik güvenlidir, sadece metin üretir.)\nKodu anlamak istersen: _d bir sayı listesi, _k bir anahtar. Her sayı _k ile XOR'lanıp karaktere çevriliyor. Aynısını elle yapabilirsin: ''.join(chr(b ^ _k) for b in _d)"
+      }
+    ]
+  }
+]

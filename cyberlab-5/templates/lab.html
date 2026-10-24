@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+{% block title %}{{ lab['name'] }} · {{ site_name }}{% endblock %}
+{% block content %}
+<a class="back-link" href="{{ url_for('dashboard') }}">&larr; Laboratuvarlara dön</a>
+
+{% if fully %}
+<div class="lab-complete-banner">
+    <span class="lcb-icon">&#10003;</span>
+    <div class="lcb-text">
+        <strong>Lab Tamamlandı!</strong>
+        <span>Bu laboratuvarın tüm görevlerini çözdün. ({{ total_pts }} puan)</span>
+    </div>
+    <button class="btn btn-danger" type="button" id="resetBtn">&#8635; Tekrar Çöz</button>
+</div>
+
+<div class="reset-overlay" id="resetOverlay" hidden>
+    <div class="reset-card">
+        <div class="reset-emoji">&#9888;&#65039;</div>
+        <h2>Lab sıfırlansın mı?</h2>
+        <p>Bu laboratuvardaki tüm görev ilerlemen silinecek ve baştan çözmen gerekecek.
+           Kazandığın {{ total_pts }} puan da geri alınacak.</p>
+        <div class="reset-actions">
+            <button class="btn btn-ghost" type="button" id="resetCancel">Vazgeç</button>
+            <form method="post" action="{{ url_for('lab_reset', slug=lab['slug']) }}" style="display:inline">
+                <button class="btn btn-danger" type="submit">Evet, sıfırla</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<article class="lab-detail">
+    <header class="lab-detail-head">
+        <div class="lab-detail-titles">
+            <span class="cat-badge">{{ lab['category'] }}</span>
+            <h1>{{ lab['name'] }}</h1>
+        </div>
+        <div class="lab-detail-meta">
+            <span class="tag tag-{{ lab['difficulty']|lower }}">{{ lab['difficulty'] }}</span>
+            <span class="points">{{ done_pts }}/{{ total_pts }} puan</span>
+        </div>
+    </header>
+
+    <div class="lab-body">
+        {% for para in lab['description'].split('\n\n') %}
+            <p>{{ para }}</p>
+        {% endfor %}
+    </div>
+
+    <div class="lab-tags">
+        {% for t in lab['tags'].split(',') %}
+            <span class="chip">{{ t }}</span>
+        {% endfor %}
+    </div>
+
+    <div class="lab-resources">
+        <div class="resource-block">
+            <span class="resource-label">&#128190; Dosyalar</span>
+            <div class="resource-items">
+                {% for f in files %}
+                    <a class="download-btn" href="{{ url_for('download', slug=lab['slug'], filename=f) }}">&#11015; {{ f }}</a>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="resource-block">
+            <span class="resource-label">&#128736; Önerilen Araçlar</span>
+            <p class="resource-tools">{{ lab['tools'] }}</p>
+        </div>
+    </div>
+
+    <section class="flag-section" id="gorevler">
+        <h2>Görevler</h2>
+        {% for task in tasks %}
+        {% set done = task['id'] in solved %}
+        <div class="task-card {{ 'done' if done }}">
+            <div class="task-head">
+                <span class="task-dot {{ 'on' if done }}">{{ '✓' if done else loop.index }}</span>
+                <span class="task-q">{{ task['question'] }}</span>
+                <span class="task-pts">{{ task['points'] }} puan</span>
+            </div>
+
+            {% if done %}
+                <p class="task-solved">Bu görevi çözdün. ✓</p>
+            {% else %}
+                <form method="post" class="task-form">
+                    <input type="hidden" name="task_id" value="{{ task['id'] }}">
+                    <input type="text" name="answer" placeholder="Cevabını yaz..." autocomplete="off" required>
+                    <button class="btn btn-primary" type="submit">Gönder</button>
+                </form>
+            {% endif %}
+
+            <details class="task-hint">
+                <summary>İpucu göster</summary>
+                <p>{{ task['hint'] }}</p>
+            </details>
+        </div>
+        {% endfor %}
+    </section>
+</article>
+
+{% if fully %}
+<script>
+(function () {
+    var b = document.getElementById('resetBtn'),
+        o = document.getElementById('resetOverlay'),
+        c = document.getElementById('resetCancel');
+    if (!b || !o) return;
+    b.addEventListener('click', function () { o.hidden = false; });
+    c.addEventListener('click', function () { o.hidden = true; });
+    o.addEventListener('click', function (e) { if (e.target === o) o.hidden = true; });
+})();
+</script>
+{% endif %}
+
+{% if just_completed %}
+<canvas id="confettiCanvas"></canvas>
+<div class="celebrate-overlay" id="celebrateOverlay">
+    <div class="celebrate-card">
+        <div class="celebrate-emoji">🎉</div>
+        <h2>Lab Tamamlandı!</h2>
+        <p><strong>{{ lab['name'] }}</strong> laboratuvarını bitirdin.</p>
+        <div class="celebrate-points">+{{ total_pts }} puan</div>
+        <div class="celebrate-actions">
+            <a class="btn btn-primary" href="{{ url_for('siralama') }}">Sıralamayı Gör</a>
+            <button class="btn btn-ghost" type="button" onclick="document.getElementById('celebrateOverlay').remove()">Devam Et</button>
+        </div>
+    </div>
+</div>
+<script>
+(function () {
+    var canvas = document.getElementById('confettiCanvas');
+    var ctx = canvas.getContext('2d');
+    function size() { canvas.width = innerWidth; canvas.height = innerHeight; }
+    size(); addEventListener('resize', size);
+    var colors = ['#3b82f6', '#93bbfd', '#1d4ed8', '#fbbf24', '#34d399', '#60a5fa'];
+    var pieces = [];
+    for (var i = 0; i < 160; i++) {
+        pieces.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * -canvas.height,
+            w: 6 + Math.random() * 6, h: 8 + Math.random() * 8,
+            color: colors[(Math.random() * colors.length) | 0],
+            vy: 2 + Math.random() * 4, vx: -2 + Math.random() * 4,
+            rot: Math.random() * 6.28, vr: -0.2 + Math.random() * 0.4
+        });
+    }
+    var start = Date.now();
+    function frame() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        pieces.forEach(function (p) {
+            p.y += p.vy; p.x += p.vx; p.rot += p.vr;
+            if (p.y > canvas.height + 20) { p.y = -20; p.x = Math.random() * canvas.width; }
+            ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot);
+            ctx.fillStyle = p.color; ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+            ctx.restore();
+        });
+        if (Date.now() - start < 5000) requestAnimationFrame(frame);
+        else canvas.remove();
+    }
+    frame();
+})();
+</script>
+{% endif %}
+{% endblock %}

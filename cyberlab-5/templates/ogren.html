@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Öğren · {{ site_name }}{% endblock %}
+{% block content %}
+<div class="page-head">
+    <h1>Öğren</h1>
+    <p>Sıfırdan uzmanlığa giden yapılandırılmış öğrenme yolları. Her yol, seni
+       adım adım gerçek laboratuvarlara hazırlar.</p>
+</div>
+
+<section class="path-grid">
+    <div class="path-card">
+        <h3>Temeller</h3>
+        <p class="path-meta">BAŞLANGIÇ · 6 modül</p>
+        <p>Siber güvenliğe ilk adım. Linux, ağ temelleri ve metodoloji.</p>
+        <ul>
+            <li>Linux komut satırı</li>
+            <li>Ağ ve protokoller</li>
+            <li>Keşif (reconnaissance)</li>
+        </ul>
+    </div>
+    <div class="path-card">
+        <h3>Web Sızma Testi</h3>
+        <p class="path-meta">ORTA · 8 modül</p>
+        <p>OWASP Top 10 ve modern web uygulaması saldırıları.</p>
+        <ul>
+            <li>SQL injection & XSS</li>
+            <li>Kimlik doğrulama zafiyetleri</li>
+            <li>Dosya yükleme & RCE</li>
+        </ul>
+    </div>
+    <div class="path-card">
+        <h3>Tehdit İstihbaratı (CTI)</h3>
+        <p class="path-meta">ORTA · 5 modül</p>
+        <p>Bir CTI analistinin günlük iş akışı: OSINT, IOC ve raporlama.</p>
+        <ul>
+            <li>OSINT teknikleri</li>
+            <li>IOC toplama & analiz</li>
+            <li>Tehdit aktörü profilleme</li>
+        </ul>
+    </div>
+    <div class="path-card">
+        <h3>Active Directory</h3>
+        <p class="path-meta">İLERİ · 7 modül</p>
+        <p>Kurumsal Windows ağlarında saldırı ve yetki yükseltme.</p>
+        <ul>
+            <li>Kerberoasting</li>
+            <li>Lateral movement</li>
+            <li>Domain Admin'e giden yol</li>
+        </ul>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block title %}Laboratuvarlar · {{ site_name }}{% endblock %}
+{% block content %}
+<section class="dash-head">
+    <div>
+        <h1 class="dash-title">Laboratuvarlar</h1>
+        <p class="dash-sub">Bir makine seç, flag'leri yakala, puanını yükselt.</p>
+    </div>
+    <div class="stats">
+        <div class="stat">
+            <span class="stat-num">{{ stats.points }}</span>
+            <span class="stat-label">Puan</span>
+        </div>
+        <div class="stat">
+            <span class="stat-num">{{ stats.solved }}/{{ stats.total }}</span>
+            <span class="stat-label">Çözülen</span>
+        </div>
+    </div>
+</section>
+
+<form class="lab-search" method="get" action="{{ url_for('dashboard') }}">
+    <input type="search" name="q" value="{{ q or '' }}" placeholder="Lab ara (isim, etiket, kategori)...">
+    {% if active_diff %}<input type="hidden" name="difficulty" value="{{ active_diff }}">{% endif %}
+    {% if active_cat %}<input type="hidden" name="category" value="{{ active_cat }}">{% endif %}
+    <button type="submit" class="btn btn-primary">Ara</button>
+</form>
+
+<div class="filters">
+    <a class="filter {{ 'active' if not active_diff }}" href="{{ url_for('dashboard', category=active_cat, q=q, status=active_status) }}">Tüm Zorluklar</a>
+    {% for d in ['Kolay','Orta','Zor'] %}
+    <a class="filter {{ 'active' if active_diff == d }}" href="{{ url_for('dashboard', difficulty=d, category=active_cat, q=q, status=active_status) }}">{{ d }}</a>
+    {% endfor %}
+    <span class="filter-sep"></span>
+    <a class="filter {{ 'active' if active_status == 'unsolved' }}" href="{{ url_for('dashboard', difficulty=active_diff, category=active_cat, q=q, status='unsolved') }}">Çözülmemiş</a>
+    <a class="filter {{ 'active' if active_status == 'solved' }}" href="{{ url_for('dashboard', difficulty=active_diff, category=active_cat, q=q, status='solved') }}">Çözülmüş</a>
+</div>
+
+<details class="cat-collapse" {% if active_cat %}open{% endif %}>
+    <summary class="cat-toggle">
+        <svg class="cat-toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
+        <span>Kategoriler{% if active_cat %}: <strong>{{ active_cat }}</strong>{% endif %}</span>
+        <svg class="cat-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+    </summary>
+    <div class="filters cat-filters">
+        <a class="chip-filter {{ 'active' if not active_cat }}" href="{{ url_for('dashboard', difficulty=active_diff, q=q, status=active_status) }}">Tüm Kategoriler</a>
+        {% for c in categories %}
+        <a class="chip-filter {{ 'active' if active_cat == c }}" href="{{ url_for('dashboard', category=c, difficulty=active_diff, q=q, status=active_status) }}">{{ c }}</a>
+        {% endfor %}
+    </div>
+</details>
+
+{% if active_diff or active_cat or q or active_status %}
+<p class="result-count">{{ stats.showing }} lab bulundu · <a href="{{ url_for('dashboard') }}">filtreleri temizle</a></p>
+{% endif %}
+
+<section class="lab-grid">
+    {% for item in labs %}
+    {% set lab = item.row %}
+    <a class="lab-card {{ 'solved' if item.fully }}" href="{{ url_for('lab_detail', slug=lab['slug']) }}">
+        <div class="lab-card-top">
+            <span class="cat-badge">{{ lab['category'] }}</span>
+            <span class="tag tag-{{ lab['difficulty']|lower }}">{{ lab['difficulty'] }}</span>
+        </div>
+        <h3 class="lab-name">
+            {{ lab['name'] }}
+            {% if item.fully %}<span class="check">&#10003;</span>{% endif %}
+        </h3>
+        <p class="lab-desc">{{ lab['short_desc'] }}</p>
+        <div class="lab-progress">
+            <div class="lab-progress-bar">
+                <span style="width: {{ (item.solved / item.total * 100) if item.total else 0 }}%"></span>
+            </div>
+            <span class="lab-progress-txt">{{ item.solved }}/{{ item.total }} görev</span>
+        </div>
+        <div class="lab-card-bottom">
+            <span class="points">{{ item.points }} puan</span>
+            <span class="file-pill">&#128206; {{ lab['files'].split(',')|length }} dosya</span>
+        </div>
+    </a>
+    {% else %}
+    <p class="empty">Bu filtreye uygun laboratuvar yok.</p>
+    {% endfor %}
+</section>
+{% endblock %}

@@ -1,0 +1,18 @@
+Return-Path: <noreply@mail-23.sptrk.ru>
+Received: from mail-23.sptrk.ru ([193.42.18.77]) by mx.kurban.com;
+        Sat, 24 Oct 2026 02:10:11 +0300
+Received-SPF: fail (kurban.com: domain of destek@bankaniz.com does not
+        designate 193.42.18.77 as permitted sender)
+Authentication-Results: mx.kurban.com; spf=fail; dkim=none
+From: "Bankaniz Guvenlik" <destek@bankaniz.com>
+To: musteri@kurban.com
+Subject: ACIL: Hesabiniz askiya alinacak!
+X-Dogrulama: CLAB{0lt4l4m4y1_f4rk_3tt1m}
+Content-Type: text/html
+
+<html><body>
+Sayin musterimiz, hesabinizda supheli hareket tespit edildi.
+Lutfen 24 saat icinde dogrulama yapin:
+<a href="http://bankaniz-guvenlik.xyz/login">Hesabimi Dogrula</a>
+Aksi halde hesabiniz kalici olarak kapatilacaktir.
+</body></html>

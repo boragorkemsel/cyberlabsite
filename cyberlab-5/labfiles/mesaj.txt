@@ -1,0 +1,7 @@
+=== CyberLab TR :: Sifre Cozucu ===
+
+Gorev 1 - Iki katman: once Base64, sonra ROT13.
+  UFlOT3tweTRmZjFwX3BlbGNnMH0=
+
+Gorev 2 - Klasik Sezar sifresi (kayma = 7).
+  JSHI{zo1ma_ao3_s3aa3yz}

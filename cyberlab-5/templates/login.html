@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Giriş Yap · {{ site_name }}{% endblock %}
+{% block content %}
+<section class="auth-wrap">
+    <div class="auth-card">
+        <h1 class="auth-title">Giriş Yap</h1>
+        <p class="auth-sub">Kullanıcı adın veya e-postan ile giriş yap.</p>
+        <form method="post" class="form" novalidate>
+            <label>Kullanıcı Adı / E-posta
+                <input type="text" name="identifier" value="{{ identifier or '' }}" required autofocus>
+            </label>
+            <label>Parola
+                <input type="password" name="password" required>
+            </label>
+            <button class="btn btn-primary btn-block" type="submit">Giriş Yap</button>
+        </form>
+        <p class="auth-switch">Hesabın yok mu? <a href="{{ url_for('register') }}">Kayıt ol</a></p>
+    </div>
+</section>
+{% endblock %}

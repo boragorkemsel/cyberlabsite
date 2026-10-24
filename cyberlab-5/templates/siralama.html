@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Sıralama · {{ site_name }}{% endblock %}
+{% block content %}
+<div class="page-head">
+    <h1>Sıralama</h1>
+    <p>{% if period == 'all' %}Tüm zamanların en çok puan toplayan avcıları.{% else %}Bu hafta (Pazartesi'den beri) en çok puan toplayanlar. Her hafta sıfırlanır.{% endif %}</p>
+</div>
+
+<div class="filters" style="justify-content:center">
+    <a class="filter {{ 'active' if period != 'all' }}" href="{{ url_for('siralama', period='week') }}">Bu Hafta</a>
+    <a class="filter {{ 'active' if period == 'all' }}" href="{{ url_for('siralama', period='all') }}">Tüm Zamanlar</a>
+</div>
+
+{% if board %}
+<section class="board">
+    <div class="board-head">
+        <span class="bh-rank">#</span>
+        <span class="bh-user">Kullanıcı</span>
+        <span class="bh-solved">Görev</span>
+        <span class="bh-pts">Puan</span>
+    </div>
+    {% for row in board %}
+    <div class="board-row {{ 'me' if row.uid == me }} rank-{{ row.rank if row.rank <= 3 }}">
+        <span class="br-rank">
+            {% if row.rank == 1 %}🥇{% elif row.rank == 2 %}🥈{% elif row.rank == 3 %}🥉{% else %}{{ row.rank }}{% endif %}
+        </span>
+        <span class="br-user">
+            {% if row.avatar %}
+                <img class="br-avatar-img" src="{{ url_for('static', filename=row.avatar) }}" alt="">
+            {% else %}
+                <span class="br-avatar">{{ row.username[0]|upper }}</span>
+            {% endif %}
+            <span class="br-name">{{ row.username }}{% if row.uid == me %} <span class="me-tag">sen</span>{% endif %}</span>
+            <span class="rank-badge rank-badge-sm" style="--rc: {{ row.rankinfo.color }}">{{ row.rankinfo.name }}</span>
+        </span>
+        <span class="br-solved">{{ row.solved }}</span>
+        <span class="br-pts">{{ row.pts }}</span>
+    </div>
+    {% endfor %}
+</section>
+{% else %}
+<p class="empty">Bu hafta henüz kimse puan toplamamış. İlk sen ol! 🚀</p>
+{% endif %}
+{% endblock %}

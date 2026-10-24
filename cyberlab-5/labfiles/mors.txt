@@ -1,0 +1,5 @@
+CyberLab TR :: Mors Alfabesi
+
+Aşağıdaki Mors kodunu çöz. Harfler boşlukla ayrılmıştır.
+
+... .. -... . .-. --. ..- ...- . -. .-.. .. -.- ..--- ----- ..--- ....-

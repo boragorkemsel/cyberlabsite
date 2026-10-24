@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+{% block title %}Anasayfa · {{ site_name }}{% endblock %}
+{% block content %}
+
+<!-- Karşılama hero -->
+<section class="home-hero">
+    <div class="home-hero-inner">
+        <div class="home-greeting">
+            {% if user['avatar'] %}
+                <img class="home-avatar" src="{{ url_for('static', filename=user['avatar']) }}" alt="">
+            {% else %}
+                <div class="home-avatar home-avatar-letter">{{ user['username'][0]|upper }}</div>
+            {% endif %}
+            <div>
+                <h1 class="home-welcome">Hoş geldin, <span class="accent">{{ user['username'] }}</span></h1>
+                <p class="home-rank">
+                    <span class="rank-badge" style="--rc: {{ rank.color }}">{{ rank.name }}</span>
+                    <span class="home-pts">{{ stats.points_all }} puan</span>
+                    <span class="home-streak">{{ stats.streak }} 🔥 seri</span>
+                </p>
+            </div>
+        </div>
+        {% if motivation %}
+        <p class="home-motivation">{{ motivation }}</p>
+        {% endif %}
+    </div>
+    <div class="hero-glow"></div>
+</section>
+
+<!-- Hızlı istatistikler -->
+<section class="home-quick-stats">
+    <div class="hqs">
+        <div class="hqs-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
+        <div class="hqs-data">
+            <span class="hqs-num">{{ stats.points_all }}</span>
+            <span class="hqs-label">Toplam Puan</span>
+        </div>
+    </div>
+    <div class="hqs">
+        <div class="hqs-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        </div>
+        <div class="hqs-data">
+            <span class="hqs-num">{{ stats.solved_labs }}/{{ stats.total_labs }}</span>
+            <span class="hqs-label">Çözülen Lab</span>
+        </div>
+    </div>
+    <div class="hqs">
+        <div class="hqs-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+        </div>
+        <div class="hqs-data">
+            <span class="hqs-num">{{ ('#' ~ week_rank) if week_rank else '—' }}</span>
+            <span class="hqs-label">Haftalık Sıra</span>
+        </div>
+    </div>
+    <div class="hqs">
+        <div class="hqs-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        </div>
+        <div class="hqs-data">
+            <span class="hqs-num">{{ stats.solved_tasks }}</span>
+            <span class="hqs-label">Çözülen Görev</span>
+        </div>
+    </div>
+</section>
+
+<!-- Rütbe ilerleme çubuğu -->
+<section class="home-rank-progress">
+    <div class="home-rank-bar-wrap">
+        <div class="home-rank-bar">
+            <span style="width: {{ rank.progress }}%; background: {{ rank.color }}"></span>
+        </div>
+        {% if rank.next_name %}
+        <p class="home-rank-txt">
+            <span class="rank-badge rank-badge-sm" style="--rc: {{ rank.color }}">{{ rank.name }}</span>
+            → <strong>{{ rank.next_name }}</strong> için {{ rank.remaining }} puan kaldı
+        </p>
+        {% else %}
+        <p class="home-rank-txt">En yüksek rütbeye ulaştın!</p>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Ana aksiyonlar -->
+<section class="home-actions">
+    {% if rec %}
+    <a class="home-action-card home-action-rec" href="{{ url_for('lab_detail', slug=rec['slug']) }}">
+        <div class="hac-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+        </div>
+        <div class="hac-body">
+            <h3>Devam Et</h3>
+            <p>{{ rec['name'] }} <span class="tag tag-{{ rec['difficulty']|lower }}">{{ rec['difficulty'] }}</span></p>
+        </div>
+        <span class="hac-arrow">&rsaquo;</span>
+    </a>
+    {% endif %}
+    <a class="home-action-card" href="{{ url_for('dashboard') }}">
+        <div class="hac-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        </div>
+        <div class="hac-body">
+            <h3>Laboratuvarlar</h3>
+            <p>{{ stats.total_labs }} lab · {{ stats.total_labs - stats.solved_labs }} çözülmemiş</p>
+        </div>
+        <span class="hac-arrow">&rsaquo;</span>
+    </a>
+    <a class="home-action-card" href="{{ url_for('siralama') }}">
+        <div class="hac-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 21h8"/><path d="M12 17V3"/><path d="M17 8l-5-5-5 5"/></svg>
+        </div>
+        <div class="hac-body">
+            <h3>Sıralama</h3>
+            <p>Haftalık liderlik tablosu</p>
+        </div>
+        <span class="hac-arrow">&rsaquo;</span>
+    </a>
+    <a class="home-action-card" href="{{ url_for('panel') }}">
+        <div class="hac-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <div class="hac-body">
+            <h3>Panelim</h3>
+            <p>Rozetler, ilerleme, detaylı istatistikler</p>
+        </div>
+        <span class="hac-arrow">&rsaquo;</span>
+    </a>
+</section>
+
+<!-- Rozetler vitrin -->
+{% if earned %}
+<section class="home-badges-section">
+    <h2 class="home-section-title">Kazanılan Rozetler <span class="badge-count">{{ earned|length }}/{{ (earned|length) + (locked|length) }}</span></h2>
+    <div class="home-badges">
+        {% for b in earned %}
+        <div class="badge earned" title="{{ b.desc }}">
+            <span class="badge-icon">{{ b.icon }}</span>
+            <span class="badge-name">{{ b.name }}</span>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+<!-- Son aktiviteler -->
+{% if stats.recent %}
+<section class="home-recent">
+    <h2 class="home-section-title">Son Aktiviteler</h2>
+    <div class="home-recent-list">
+        {% for a in stats.recent %}
+        <div class="home-recent-item">
+            <span class="act-dot">✓</span>
+            <span class="act-text"><strong>{{ a.lab }}</strong></span>
+            <span class="act-pts">+{{ a.pts }}</span>
+            <span class="act-when">{{ a.when }}</span>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+{% endblock %}

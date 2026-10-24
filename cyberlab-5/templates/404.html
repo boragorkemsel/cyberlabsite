@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Bulunamadı · {{ site_name }}{% endblock %}
+{% block content %}
+<section class="auth-wrap">
+    <div class="auth-card" style="text-align:center">
+        <h1 class="auth-title">404</h1>
+        <p class="auth-sub">Aradığın sayfa ya da laboratuvar bulunamadı.</p>
+        <a class="btn btn-primary" href="{{ url_for('index') }}">Anasayfaya dön</a>
+    </div>
+</section>
+{% endblock %}

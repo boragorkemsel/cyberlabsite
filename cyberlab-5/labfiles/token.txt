@@ -1,0 +1,6 @@
+CyberLab TR :: JWT Kırığı
+
+Bir web uygulaması sana şu JWT (JSON Web Token) oturum anahtarını verdi.
+JWT'ler ŞİFRELİ DEĞİLDİR — sadece Base64URL ile kodlanmıştır. İçini okuyabilir misin?
+
+eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJ1c2VyIjogImFkbWluIiwgInJvbGUiOiAiYWRtaW5pc3RyYXRvciIsICJmbGFnIjogIkNMQUJ7and0X2cxemwxX2QzZzFsfSJ9.ZmFrZS1zaWduYXR1cmUtbm90LXZlcmlmaWVk

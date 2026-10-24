@@ -1,0 +1,6 @@
+CyberLab TR :: Base Kampı
+
+Aşağıdaki metin üç kez kodlandı. Katmanları SIRAYLA soy:
+1) Base64 çöz  2) Base32 çöz  3) Hex çöz
+
+R1FaVElZWlVHRTJERU4zQ0dZWkRHTkJYR01aVEdOTEdHWVpUR05CV01RM1RBTkxHR1kzVEdNWldHTTNUSU1aUkdaU1RPWkE9

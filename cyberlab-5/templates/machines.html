@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Makineler · {{ site_name }}{% endblock %}
+{% block content %}
+<div class="page-head">
+    <h1>Makineler</h1>
+    <p>Canli zafiyetli makineleri baslat, hackle, flag'leri yakala!</p>
+</div>
+
+<div class="machine-grid">
+    {% for m in machines %}
+    <a class="machine-card {{ 'solved' if m.fully }}" href="{{ url_for('machine_detail', machine_id=m.id) }}">
+        <div class="machine-card-top">
+            <span class="machine-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            </span>
+            {% if m.status == 'running' %}
+            <span class="machine-status on">
+                <span class="status-dot"></span>
+                Online
+            </span>
+            {% endif %}
+        </div>
+        <h3>{{ m.name }}{% if m.fully %} <span class="check">&#10003;</span>{% endif %}</h3>
+        <p class="machine-desc">{{ m.description[:100] }}{% if m.description|length > 100 %}...{% endif %}</p>
+        <div class="machine-progress">
+            <div class="machine-progress-bar">
+                <span style="width: {{ (m.done / m.total * 100) if m.total else 0 }}%"></span>
+            </div>
+            <span class="machine-progress-txt">{{ m.done }}/{{ m.total }} görev</span>
+        </div>
+        <div class="machine-meta">
+            <span class="cat-badge">{{ m.category }}</span>
+            <span class="tag tag-{{ m.difficulty|lower }}">{{ m.difficulty }}</span>
+        </div>
+    </a>
+    {% endfor %}
+</div>
+
+{% if not machines %}
+<div class="empty-state">
+    <p>Henuz makine eklenmemis.</p>
+</div>
+{% endif %}
+{% endblock %}

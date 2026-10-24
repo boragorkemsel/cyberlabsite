@@ -1,0 +1,6 @@
+CyberLab TR :: XOR Gizemi
+
+Aşağıdaki hex metin, bilinmeyen TEK bir bayt (0-255) ile XOR'lanmış bir flag.
+Anahtarı bilmiyorsun ama 256 olasılık var — hepsini deneyebilirsin.
+
+19161b1821226a28052e693105386e232e05316b286b363e6b27

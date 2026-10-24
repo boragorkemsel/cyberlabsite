@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+    <div class="hero-inner">
+        <p class="hero-kicker">SİBER GÜVENLİK EĞİTİM PLATFORMU</p>
+        <h1 class="hero-title">
+            Saldırarak <span class="accent">öğren.</span><br>
+            Gerçek laboratuvarlarda <span class="accent">pratik yap.</span>
+        </h1>
+        <p class="hero-sub">
+            CyberLab TR; TryHackMe ve HackTheBox tarzında, tamamen Türkçe
+            hazırlanmış pratik laboratuvarlar sunar. Web güvenliğinden Active
+            Directory'ye, OSINT'ten kriptografiye kadar gerçek senaryolarla
+            becerilerini test et, flag'leri yakala, puan topla.
+        </p>
+        <div class="hero-actions">
+            {% if user %}
+                <a class="btn btn-primary btn-lg" href="{{ url_for('dashboard') }}">Laboratuvarlara Git</a>
+            {% else %}
+                <a class="btn btn-primary btn-lg" href="{{ url_for('register') }}">Ücretsiz Kayıt Ol</a>
+                <a class="btn btn-ghost btn-lg" href="{{ url_for('login') }}">Giriş Yap</a>
+            {% endif %}
+        </div>
+    </div>
+    <div class="hero-glow"></div>
+</section>
+
+<section class="features">
+    <div class="feature-card">
+        <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+        </div>
+        <h3>Uygulamalı Laboratuvarlar</h3>
+        <p>Teori değil pratik. Zafiyetli makinelere sız, flag'leri bul, adım adım gerçek saldırı teknikleri öğren.</p>
+    </div>
+    <div class="feature-card">
+        <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="20" x2="6" y2="14"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="18" y1="20" x2="18" y2="10"/></svg>
+        </div>
+        <h3>Puan & İlerleme</h3>
+        <p>Her yakaladığın flag puan kazandırır. Çözdüğün lab sayısını ve toplam puanını panelinden takip et.</p>
+    </div>
+    <div class="feature-card">
+        <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <h3>CTI Odaklı İçerik</h3>
+        <p>OSINT ve tehdit istihbaratı senaryolarıyla, Türkiye'deki gerçek tehdit ortamına yakın pratik.</p>
+    </div>
+</section>
+
+<section class="levels">
+    <h2 class="section-title">Her seviyeye uygun</h2>
+    <div class="level-row">
+        <span class="tag tag-kolay">Kolay</span>
+        <span class="tag tag-orta">Orta</span>
+        <span class="tag tag-zor">Zor</span>
+    </div>
+    <p class="levels-note">Yeni başlayanlar için rehberli kolay odalardan, ileri seviye Active Directory senaryolarına kadar.</p>
+</section>
+
+<section class="faq-section">
+    <h2 class="section-title">Sık Sorulan Sorular</h2>
+    <div class="faq-list">
+        <details class="faq-item">
+            <summary class="faq-q">
+                <span>CyberLab TR nedir?</span>
+                <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </summary>
+            <div class="faq-a">CyberLab TR, TryHackMe ve HackTheBox benzeri tamamen Türkçe hazırlanmış bir siber güvenlik eğitim platformudur. Gerçek senaryolara dayalı pratik laboratuvarlarla saldırı ve savunma tekniklerini öğrenmenizi sağlar.</div>
+        </details>
+        <details class="faq-item">
+            <summary class="faq-q">
+                <span>Biz kimiz?</span>
+                <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </summary>
+            <div class="faq-a">Siber güvenlik alanında tutkulu bir ekibiz. Türkiye'deki siber güvenlik eğitim eksikliğini kapatmak ve Türkçe kaynak ihtiyacını karşılamak için CyberLab TR'yi geliştiriyoruz. Amacımız herkese erişilebilir, kaliteli ve uygulamalı eğitim sunmak.</div>
+        </details>
+        <details class="faq-item">
+            <summary class="faq-q">
+                <span>Hiçbir şey bilmiyorum, bu site bana göre mi?</span>
+                <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </summary>
+            <div class="faq-a">Kesinlikle evet! Platformumuzda "Kolay" seviyesinden başlayan, adım adım rehberli laboratuvarlar bulunuyor. Her görevde ipuçları mevcut ve sıfırdan öğrenmeniz için tasarlanmış içerikler var. Tek ihtiyacınız öğrenme isteği!</div>
+        </details>
+        <details class="faq-item">
+            <summary class="faq-q">
+                <span>Platform ücretsiz mi?</span>
+                <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </summary>
+            <div class="faq-a">Evet, şu anda platformdaki tüm laboratuvarlar tamamen ücretsizdir. Kayıt olup hemen çözmeye başlayabilirsiniz. İleride premium içerikler eklenebilir ancak temel eğitim her zaman ücretsiz kalacaktır.</div>
+        </details>
+        <details class="faq-item">
+            <summary class="faq-q">
+                <span>Laboratuvarları çözmek için bir makine kurmam gerekiyor mu?</span>
+                <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </summary>
+            <div class="faq-a">Hayır! Tüm laboratuvarlarımız dosya tabanlıdır. Size verilen dosyaları indirip analiz ederek flag'leri bulursunuz. Sanal makine kurmanıza veya VPN bağlantısı yapmanıza gerek yoktur. Bir tarayıcı ve metin editörü yeterlidir.</div>
+        </details>
+        <details class="faq-item">
+            <summary class="faq-q">
+                <span>Puan ve rütbe sistemi nasıl çalışıyor?</span>
+                <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </summary>
+            <div class="faq-a">Her laboratuvardaki görevleri çözdükçe puan kazanırsınız. Toplam puanınıza göre "Çaylak"tan "Efsane"ye kadar rütbe atlarsınız. Ayrıca ardışık günlerde aktif olarak seri (streak) oluşturabilir ve özel rozetler kazanabilirsiniz. Sıralama tablosunda diğer kullanıcılarla yarışın!</div>
+        </details>
+        <details class="faq-item">
+            <summary class="faq-q">
+                <span>Flag formatı nedir?</span>
+                <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </summary>
+            <div class="faq-a">Flag'lerimiz <code>CLAB{...}</code> formatındadır. Laboratuvardaki dosyaları analiz ederek bu formattaki flag'leri bulmanız ve görev kutusuna girmeniz yeterlidir. Bazı görevlerde flag yerine doğrudan bir cevap (IP adresi, kullanıcı adı vb.) istenebilir.</div>
+        </details>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,8 @@
+CyberLab TR :: Zincirleme
+
+Bu flag üç işlemden geçti. Çözmek için işlemleri TERS SIRADA geri al:
+  1) Base64 çöz
+  2) Çıkan metni TERS çevir
+  3) Hex olarak çöz
+
+ZDdlNjAzOTcxMzM3YjY0MzMzMjdmNTMzZDYzM2M2MjcxMzM2ZTYxM2E3YjcyNDE0YzQzNA==

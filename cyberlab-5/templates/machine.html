@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+{% block title %}{{ info.name }} · {{ site_name }}{% endblock %}
+{% block content %}
+<a class="back-link" href="{{ url_for('machines_list') }}">&larr; Makinelere don</a>
+
+{% if fully %}
+<div class="lab-complete-banner">
+    <span class="lcb-icon">&#10003;</span>
+    <div class="lcb-text">
+        <strong>Makine Tamamlandı!</strong>
+        <span>Bu makinenin tüm görevlerini çözdün. ({{ total_pts }} puan)</span>
+    </div>
+    <button class="btn btn-danger" type="button" id="resetBtn">&#8635; Tekrar Çöz</button>
+</div>
+
+<div class="reset-overlay" id="resetOverlay" hidden>
+    <div class="reset-card">
+        <div class="reset-emoji">&#9888;&#65039;</div>
+        <h2>Makine sıfırlansın mı?</h2>
+        <p>Bu makinedeki tüm görev ilerlemen silinecek ve baştan çözmen gerekecek.
+           Kazandığın {{ total_pts }} puan da geri alınacak.</p>
+        <div class="reset-actions">
+            <button class="btn btn-ghost" type="button" id="resetCancel">Vazgeç</button>
+            <form method="post" action="{{ url_for('machine_reset', machine_id=machine_id) }}" style="display:inline">
+                <button class="btn btn-danger" type="submit">Evet, sıfırla</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<article class="lab-detail">
+    <header class="lab-detail-head">
+        <div class="lab-detail-titles">
+            <span class="cat-badge">{{ info.category }}</span>
+            <h1>{{ info.name }}{% if fully %} <span class="check">&#10003;</span>{% endif %}</h1>
+        </div>
+        <div class="lab-detail-meta">
+            <span class="tag tag-{{ info.difficulty|lower }}">{{ info.difficulty }}</span>
+            <span class="points">{{ done_pts }}/{{ total_pts }} puan</span>
+        </div>
+    </header>
+
+    <div class="lab-body">
+        <p>{{ info.description }}</p>
+    </div>
+
+    <!-- MAKINE KONTROL PANELI -->
+    <div class="machine-control">
+        {% if fully %}
+        <div class="machine-done">
+            <span class="machine-done-icon">&#10003;</span>
+            <div>
+                <strong>Makine çözüldü ve kapatıldı.</strong>
+                <p class="machine-hint-text">Tüm görevleri tamamladığın için makine otomatik olarak durduruldu. İstersen "Tekrar Çöz" ile baştan başlayabilirsin.</p>
+            </div>
+        </div>
+        {% elif running %}
+        <div class="machine-running">
+            <div class="machine-status-bar">
+                <span class="pulse-dot"></span>
+                <span class="machine-status-text online">Online — Makine Calisiyor</span>
+            </div>
+            <div class="machine-target">
+                <span class="target-label">Hedef:</span>
+                <code class="target-url">http://&lt;sunucu-ip&gt;:{{ port }}</code>
+            </div>
+            <p class="machine-hint-text">Tarayicinda yukaridaki adresi ac (sunucu-ip yerine bu bilgisayarin IP'sini yaz). Ornegin: <code>http://192.168.1.100:{{ port }}</code></p>
+            <form method="post" action="{{ url_for('machine_stop', machine_id=machine_id) }}" style="margin-top:12px;">
+                <button class="btn btn-danger btn-sm" type="submit">Makineyi Durdur</button>
+            </form>
+        </div>
+        {% else %}
+        <div class="machine-stopped">
+            <div class="machine-status-bar">
+                <span class="pulse-dot off"></span>
+                <span class="machine-status-text offline">Offline — Makine Durmus</span>
+            </div>
+            <p class="machine-hint-text">Makineyi baslatarak zafiyetli uygulamaya erisim sagla.</p>
+            <form method="post" action="{{ url_for('machine_start', machine_id=machine_id) }}">
+                <button class="btn btn-primary machine-start-btn" type="submit">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                    Makineyi Baslat
+                </button>
+            </form>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- GOREVLER -->
+    <section class="flag-section" id="gorevler">
+        <h2>Gorevler</h2>
+        {% for task in tasks %}
+        <div class="task-card {{ 'done' if task.done }}">
+            <div class="task-head">
+                <span class="task-dot {{ 'on' if task.done }}">{% if task.done %}✓{% else %}{{ loop.index }}{% endif %}</span>
+                <span class="task-q">{{ task.question }}</span>
+                <span class="task-pts">{{ task.points }} puan</span>
+            </div>
+
+            {% if task.done %}
+                <p class="task-solved">Bu gorevi cozdun. ✓</p>
+            {% else %}
+                <form method="post" action="{{ url_for('machine_submit', machine_id=machine_id) }}" class="task-form">
+                    <input type="hidden" name="task_idx" value="{{ loop.index0 }}">
+                    <input type="text" name="answer" placeholder="Cevabini yaz..." autocomplete="off" required>
+                    <button class="btn btn-primary" type="submit">Gonder</button>
+                </form>
+            {% endif %}
+
+            <details class="task-hint">
+                <summary>Ipucu goster</summary>
+                <p>{{ task.hint }}</p>
+            </details>
+        </div>
+        {% endfor %}
+    </section>
+</article>
+
+{% if fully %}
+<script>
+(function () {
+    var b = document.getElementById('resetBtn'),
+        o = document.getElementById('resetOverlay'),
+        c = document.getElementById('resetCancel');
+    if (!b || !o) return;
+    b.addEventListener('click', function () { o.hidden = false; });
+    c.addEventListener('click', function () { o.hidden = true; });
+    o.addEventListener('click', function (e) { if (e.target === o) o.hidden = true; });
+})();
+</script>
+{% endif %}
+
+{% if just_completed %}
+<canvas id="confettiCanvas"></canvas>
+<div class="celebrate-overlay" id="celebrateOverlay">
+    <div class="celebrate-card">
+        <div class="celebrate-emoji">🎉</div>
+        <h2>Makine Tamamlandı!</h2>
+        <p><strong>{{ info.name }}</strong> makinesini bitirdin.</p>
+        <div class="celebrate-points">+{{ total_pts }} puan</div>
+        <div class="celebrate-actions">
+            <a class="btn btn-primary" href="{{ url_for('siralama') }}">Sıralamayı Gör</a>
+            <button class="btn btn-ghost" type="button" onclick="document.getElementById('celebrateOverlay').remove()">Devam Et</button>
+        </div>
+    </div>
+</div>
+<script>
+(function () {
+    var canvas = document.getElementById('confettiCanvas');
+    var ctx = canvas.getContext('2d');
+    function size() { canvas.width = innerWidth; canvas.height = innerHeight; }
+    size(); addEventListener('resize', size);
+    var colors = ['#3b82f6', '#93bbfd', '#1d4ed8', '#fbbf24', '#34d399', '#60a5fa'];
+    var pieces = [];
+    for (var i = 0; i < 160; i++) {
+        pieces.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * -canvas.height,
+            w: 6 + Math.random() * 6, h: 8 + Math.random() * 8,
+            color: colors[(Math.random() * colors.length) | 0],
+            vy: 2 + Math.random() * 4, vx: -2 + Math.random() * 4,
+            rot: Math.random() * 6.28, vr: -0.2 + Math.random() * 0.4
+        });
+    }
+    var start = Date.now();
+    function frame() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        pieces.forEach(function (p) {
+            p.y += p.vy; p.x += p.vx; p.rot += p.vr;
+            if (p.y > canvas.height + 20) { p.y = -20; p.x = Math.random() * canvas.width; }
+            ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot);
+            ctx.fillStyle = p.color; ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+            ctx.restore();
+        });
+        if (Date.now() - start < 5000) requestAnimationFrame(frame);
+        else canvas.remove();
+    }
+    frame();
+})();
+</script>
+{% endif %}
+{% endblock %}

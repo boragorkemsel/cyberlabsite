@@ -1,0 +1,9 @@
+CyberLab TR :: Tersten Bak
+
+İki basit klasik teknik:
+
+Görev 1 — Metin tersten yazılmış. Düz çevir:
+  }m1dr1v3c_3n1sr3t{BALC
+
+Görev 2 — Atbash şifresi (A<->Z, B<->Y ... aynanın karşısı). Çöz:
+  XOZY{zbm4_zbm4_h0bo3}
